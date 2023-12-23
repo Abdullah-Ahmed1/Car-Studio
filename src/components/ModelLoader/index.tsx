@@ -8,7 +8,6 @@ const ModelLoader = () => {
     dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.3/");
     loader.setDRACOLoader(dracoLoader);
   });
-
   console.log("gltf is", gltf);
 
   return (
