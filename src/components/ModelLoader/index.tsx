@@ -1,36 +1,45 @@
-import * as THREE from "three";
-import { useLoader } from "@react-three/fiber";
+import { useState } from "react";
+import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+
 const ModelLoader = () => {
+  const { raycaster } = useThree();
+  const [hovered, setHovered] = useState(null);
+  const [originalColor, setOriginalColor] = useState(null);
   const gltf = useLoader(GLTFLoader, "/nissan1.glb", (loader) => {
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.3/");
     loader.setDRACOLoader(dracoLoader);
   });
-  console.log("gltf is", gltf);
+
+  useFrame(() => {
+    const intersects = raycaster.intersectObject(gltf.scene, true);
+
+    if (intersects.length > 0) {
+      const mesh = intersects[0].object;
+
+      if (mesh !== hovered) {
+        if (hovered && originalColor) {
+          hovered.material.color.copy(originalColor);
+        }
+
+        setHovered(mesh);
+        setOriginalColor(mesh.material.color.clone());
+        mesh.material.color.set("#6d6d6d");
+      }
+    } else {
+      if (hovered && originalColor) {
+        hovered.material.color.copy(originalColor);
+        setHovered(null);
+      }
+    }
+  });
 
   return (
-    <primitive object={gltf.scene}>
-      {gltf.scene &&
-        gltf.scene.traverse((child: any) => {
-          if (child instanceof THREE.Mesh) {
-            console.log("child>>>>>", child);
-            if (child.name == "Object_15") {
-              child.material.color = new THREE.Color("#3d34eb");
-            }
-            if (child.name == "Object_17") {
-              child.material.color = new THREE.Color("#050506");
-            }
-            if (child.name == "Object_14") {
-              child.material.color = new THREE.Color("#eb34a8");
-            }
-            if (child.name == "Object_38") {
-              child.material.color = new THREE.Color("#eb34a8");
-            }
-          }
-        })}
-    </primitive>
+    <group>
+      <primitive object={gltf.scene} />
+    </group>
   );
 };
 
