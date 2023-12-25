@@ -44,7 +44,6 @@ const ModelLoader = () => {
         if (hovered && originalColor) {
           hovered.material.color.copy(originalColor);
         }
-
         setHovered(mesh);
         setOriginalColor(mesh.material.color.clone());
         mesh.material.color.set("#6d6d6d");

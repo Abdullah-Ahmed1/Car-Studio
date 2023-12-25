@@ -1,10 +1,13 @@
 import Scene from "./components/Scene";
+import { MainContainer } from "./App.styled";
+import IconsContainer from "./components/IconsContainer";
 
 function App() {
   return (
-    <div style={{ height: "100vh" }}>
+    <MainContainer>
+      <IconsContainer />
       <Scene />
-    </div>
+    </MainContainer>
   );
 }
 
