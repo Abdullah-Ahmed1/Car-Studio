@@ -7,18 +7,22 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { ColorsAtom } from "../../atoms/colors.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
+import { CameraAtom } from "../../atoms/camera.atom";
 import { useSetAtom, useAtom, useAtomValue } from "jotai";
 
 const ModelLoader = () => {
-  const { raycaster } = useThree();
+  const { raycaster, camera } = useThree();
   const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
   const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
-  const rotationRef = useRef<null | React.MutableRefObject<object>>(null);
   const [modelRotation, setModelRotation] = useAtom(RotationAtom);
   const [originalColor, setOriginalColor] = useState(null);
   const [originalColor2, setOriginalColor2] = useState(null);
   const setColorsShow = useSetAtom(ColorsAtom);
   const selectedColor = useAtomValue(SelectedColorAtom);
+  const setCamera = useSetAtom(CameraAtom);
+
+  const rotationRef = useRef<null | React.MutableRefObject<object>>(null);
+  const cameraRef = useRef<unknown>(null);
 
   const gltf = useLoader(GLTFLoader, "/nissan1.glb", (loader) => {
     const dracoLoader = new DRACOLoader();
@@ -26,16 +30,19 @@ const ModelLoader = () => {
     loader.setDRACOLoader(dracoLoader);
   });
 
+  useEffect(() => {
+    cameraRef.current == camera;
+    setCamera(camera);
+  }, [camera]);
+
   const handleClick = () => {
     //todo : if one the mesh is already selected and then user click another mesh, previously selected mesh color should be reset to its original
     setHovered2(hovered);
     setOriginalColor2(originalColor);
     if (originalColor && hovered) {
-      if (hovered !== hovered2) {
-        setOriginalColor(originalColor2);
-        hovered2?.material?.color.copy(originalColor2);
-        setColorsShow(true);
-      }
+      setOriginalColor(originalColor2);
+      hovered2?.material?.color.copy(originalColor2);
+      setColorsShow(true);
       setOriginalColor(hovered.material.color.clone());
     }
     if (rotationRef.current && modelRotation) {
@@ -43,6 +50,7 @@ const ModelLoader = () => {
       rotationRef.current.paused(true);
       setTimeout(() => {
         rotationRef.current.paused(false);
+        setModelRotation(true);
       }, 5000);
     }
   };
