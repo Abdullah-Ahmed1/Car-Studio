@@ -7,6 +7,7 @@ import { RotationAtom } from "../../atoms/rotation.atom";
 import { ColorsAtom } from "../../atoms/colors.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
 import { useSetAtom, useAtom, useAtomValue } from "jotai";
+import THREE from "three";
 
 const ModelLoader = () => {
   const { raycaster } = useThree();
@@ -74,7 +75,7 @@ const ModelLoader = () => {
     if (intersects.length > 0) {
       const mesh = intersects[0].object;
 
-      if (mesh !== hovered) {
+      if (mesh instanceof THREE.Mesh && mesh !== hovered) {
         if (hovered && originalColor) {
           hovered.material.color.copy(originalColor);
         }
