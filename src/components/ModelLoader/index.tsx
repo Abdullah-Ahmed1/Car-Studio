@@ -11,9 +11,9 @@ import THREE from "three";
 
 const ModelLoader = () => {
   const { raycaster } = useThree();
-  const [hovered, setHovered] = useState(null);
-  const [hovered2, setHovered2] = useState(null);
-  const rotationRef = useRef(null);
+  const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
+  const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
+  const rotationRef = useRef<null | React.MutableRefObject<object>>(null);
   const [modelRotation, setModelRotation] = useAtom(RotationAtom);
   const [originalColor, setOriginalColor] = useState(null);
   const [originalColor2, setOriginalColor2] = useState(null);
@@ -48,10 +48,10 @@ const ModelLoader = () => {
   };
 
   useEffect(() => {
-    if (!selectedColor && !hovered2) return;
-    hovered2.material.color.set(selectedColor);
-    setOriginalColor(hovered2.material.color.clone());
-    setOriginalColor2(hovered2.material.color.clone());
+    if (!selectedColor && !hovered2 && !hovered2) return;
+    hovered2?.material.color.set(selectedColor);
+    setOriginalColor(hovered2?.material.color.clone());
+    setOriginalColor2(hovered2?.material.color.clone());
   }, [selectedColor]);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const ModelLoader = () => {
   }, [gltf.scene]);
 
   useFrame(() => {
-    const intersects = raycaster.intersectObject(gltf.scene, true);
+    const intersects: THREE.Intersection[] = raycaster.intersectObject(gltf.scene, true);
 
     if (intersects.length > 0) {
       const mesh = intersects[0].object;
