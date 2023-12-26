@@ -4,14 +4,21 @@ import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { RotationAtom } from "../../atoms/rotation.atom";
-import { useAtomValue } from "jotai";
+import { ColorsAtom } from "../../atoms/colors.atom";
+import { SelectedColorAtom } from "../../atoms/color.atom";
+import { useSetAtom, useAtom, useAtomValue } from "jotai";
 
 const ModelLoader = () => {
   const { raycaster } = useThree();
   const [hovered, setHovered] = useState(null);
+  const [hovered2, setHovered2] = useState(null);
   const rotationRef = useRef(null);
-  const modelRotation = useAtomValue(RotationAtom);
+  const [modelRotation, setModelRotation] = useAtom(RotationAtom);
   const [originalColor, setOriginalColor] = useState(null);
+  const [originalColor2, setOriginalColor2] = useState(null);
+  const setColorsShow = useSetAtom(ColorsAtom);
+  const selectedColor = useAtomValue(SelectedColorAtom);
+
   const gltf = useLoader(GLTFLoader, "/nissan1.glb", (loader) => {
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.3/");
@@ -19,13 +26,32 @@ const ModelLoader = () => {
   });
 
   const handleClick = () => {
-    if (rotationRef.current && model) {
+    //todo : if one the mesh is already selected and then user click another mesh, previously selected mesh color should be reset to its original
+    setHovered2(hovered);
+    setOriginalColor2(originalColor);
+    if (originalColor && hovered) {
+      if (hovered !== hovered2) {
+        setOriginalColor(originalColor2);
+        hovered2?.material?.color.copy(originalColor2);
+        setColorsShow(true);
+      }
+      setOriginalColor(hovered.material.color.clone());
+    }
+    if (rotationRef.current && modelRotation) {
+      setModelRotation(false);
       rotationRef.current.paused(true);
       setTimeout(() => {
         rotationRef.current.paused(false);
       }, 5000);
     }
   };
+
+  useEffect(() => {
+    if (!selectedColor && !hovered2) return;
+    hovered2.material.color.set(selectedColor);
+    setOriginalColor(hovered2.material.color.clone());
+    setOriginalColor2(hovered2.material.color.clone());
+  }, [selectedColor]);
 
   useEffect(() => {
     if (!rotationRef.current) return;

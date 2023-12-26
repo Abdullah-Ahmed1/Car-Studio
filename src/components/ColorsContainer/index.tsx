@@ -1,13 +1,27 @@
-import { MainContainer, Color } from "./index.styled";
+import { MainContainer, Color, ColorContainer, IconPallete } from "./index.styled";
+import { ColorsAtom } from "../../atoms/colors.atom";
+import { useAtom, useSetAtom } from "jotai";
+import { SelectedColorAtom } from "../../atoms/color.atom";
 
-const colors = ["red", "white", "purple", "orange", "yellow", "green"];
+const colors = ["#ff0000", "#FFFFFF", "#800080", "#FFA500", "#FFFF00", "#00FF00"];
 
 const ColorsContainer = () => {
+  const [colorsShow, setColorsShow] = useAtom(ColorsAtom);
+  const setColor = useSetAtom(SelectedColorAtom);
+
+  const handleColorClick = (item: string) => {
+    setColor(item);
+    setColorsShow(false);
+  };
+
   return (
     <MainContainer>
-      {colors.map((item, index) => {
-        return <Color key={index} backgroundColor={item} />;
-      })}
+      <IconPallete />
+      <ColorContainer colorshow={colorsShow}>
+        {colors.map((item, index) => {
+          return <Color key={index} backgroundcolor={item} onClick={() => handleColorClick(item)} />;
+        })}
+      </ColorContainer>
     </MainContainer>
   );
 };
