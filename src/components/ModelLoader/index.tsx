@@ -1,13 +1,16 @@
+import gsap from "gsap";
 import { useState, useRef, useEffect } from "react";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-import gsap from "gsap";
+import { RotationAtom } from "../../atoms/rotation.atom";
+import { useAtomValue } from "jotai";
 
 const ModelLoader = () => {
   const { raycaster } = useThree();
   const [hovered, setHovered] = useState(null);
   const rotationRef = useRef(null);
+  const modelRotation = useAtomValue(RotationAtom);
   const [originalColor, setOriginalColor] = useState(null);
   const gltf = useLoader(GLTFLoader, "/nissan1.glb", (loader) => {
     const dracoLoader = new DRACOLoader();
@@ -16,13 +19,18 @@ const ModelLoader = () => {
   });
 
   const handleClick = () => {
-    if (rotationRef.current) {
+    if (rotationRef.current && model) {
       rotationRef.current.paused(true);
       setTimeout(() => {
         rotationRef.current.paused(false);
       }, 5000);
     }
   };
+
+  useEffect(() => {
+    if (!rotationRef.current) return;
+    modelRotation ? rotationRef.current.paused(false) : rotationRef.current.paused(true);
+  }, [modelRotation]);
 
   useEffect(() => {
     rotationRef.current = gsap.to(gltf.scene.rotation, {
