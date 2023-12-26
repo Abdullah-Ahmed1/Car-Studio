@@ -1,13 +1,13 @@
 import gsap from "gsap";
 import { useState, useRef, useEffect } from "react";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { ColorsAtom } from "../../atoms/colors.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
 import { useSetAtom, useAtom, useAtomValue } from "jotai";
-import THREE from "three";
 
 const ModelLoader = () => {
   const { raycaster } = useThree();
