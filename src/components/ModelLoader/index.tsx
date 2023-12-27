@@ -39,34 +39,39 @@ const ModelLoader = () => {
   }, [camera]);
 
   const handleClick = () => {
-    //todo : if one the mesh is already selected and then user click another mesh, previously selected mesh color should be reset to its original
-    setHovered2(hovered);
-    setOriginalColor2(originalColor);
-    if (originalColor && hovered) {
-      setOriginalColor(originalColor2);
-      hovered2?.material?.color.copy(originalColor2);
-      setColorsShow(true);
-      setOriginalColor(hovered.material.color.clone());
-    }
+    //todo : if one the mesh is already selected and then user click another mesh, previously selected mesh color should be reset to its
+    setHovered2(hovered); //the mesh with red color
+    setOriginalColor2(originalColor); //red
+    setColorsShow(true);
+
     if (rotationRef.current && modelRotation) {
       setModelRotation(false);
       rotationRef.current.paused(true);
-      setTimeout(() => {
-        rotationRef.current.paused(false);
-        setModelRotation(true);
-      }, 5000);
     }
   };
 
   useEffect(() => {
-    console.log("<<<>>>>", selectedColor, hovered2);
-    if (!selectedColor && !hovered2) return;
-    console.log("////");
-    hovered2?.material.color.set(selectedColor);
-    setOriginalColor(hovered2?.material.color.clone());
-    setOriginalColor2(hovered2?.material.color.clone());
-    setSelectedColor(null);
-  }, [selectedColor, hovered2]);
+    if (!hovered2) return;
+
+    setOriginalColor(new THREE.Color("#6d6d6d"));
+    console.log("=====================", hovered2, hovered, hovered == hovered2);
+    return () => {
+      hovered?.material?.color.copy(originalColor);
+    };
+  }, [hovered2]);
+
+  useEffect(() => {
+    console.log("#####", hovered, selectedColor);
+    if (!selectedColor) return;
+    const temp = hovered2;
+    temp.material?.color.copy(new THREE.Color(selectedColor));
+    setOriginalColor2(new THREE.Color(selectedColor));
+    setOriginalColor(new THREE.Color(selectedColor));
+  }, [selectedColor]);
+
+  useEffect(() => {
+    console.log("test123");
+  }, [originalColor, hovered]);
 
   useEffect(() => {
     if (!rotationRef.current) return;
@@ -93,14 +98,14 @@ const ModelLoader = () => {
         if (hovered && originalColor) {
           hovered.material.color.copy(originalColor);
         }
-        setHovered(mesh);
-        setOriginalColor(mesh.material.color.clone());
-        mesh.material.color.set("#6d6d6d");
+        setHovered(mesh); //saving the original hovered mesh into the state
+        setOriginalColor(mesh.material.color.clone()); // and then setting the original color to the state also
+        mesh.material.color.set("#6d6d6d"); // setting the color of the mesh to this hex
       }
     } else {
       if (hovered && originalColor) {
-        hovered.material.color.copy(originalColor);
-        setHovered(null);
+        hovered.material.color.copy(originalColor); // when mesh is unhovered then setting the mesh to its original color
+        setHovered(null); // then setting the mesh to null
       }
     }
   });
