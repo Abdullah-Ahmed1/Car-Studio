@@ -43,18 +43,19 @@ const ModelLoader = () => {
     setHovered2(hovered);
     setOriginalColor2(originalColor);
     if (originalColor && hovered) {
-      setOriginalColor(originalColor2);
+      // setOriginalColor(originalColor2);
       hovered2?.material?.color.copy(originalColor2);
       setColorsShow(true);
       setOriginalColor(hovered.material.color.clone());
     }
+
     if (rotationRef.current && modelRotation) {
       setModelRotation(false);
       rotationRef.current.paused(true);
-      setTimeout(() => {
-        rotationRef.current.paused(false);
-        setModelRotation(true);
-      }, 5000);
+      // setTimeout(() => {
+      //   rotationRef.current.paused(false);
+      //   setModelRotation(true);
+      // }, 5000);
     }
   };
 
