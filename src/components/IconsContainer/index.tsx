@@ -20,7 +20,6 @@ const IconsContainer = () => {
     camera?.updateProjectionMatrix();
   };
   const handleViewChange = () => {
-    console.log("cc");
     // gsap.to(camera.position, {
     //   x: 20,
     //   // y: -20,
@@ -33,7 +32,6 @@ const IconsContainer = () => {
     //   x: 0,
     //   y: 0,
     //   z: 3,
-
     //   // repeat: -1,
     //   ease: "Power1.easeInOut",
     //   // paused: false,
@@ -42,7 +40,6 @@ const IconsContainer = () => {
     //   x: 0,
     //   y: 10,
     //   z: 0,
-
     //   // repeat: -1,
     //   ease: "Power1.easeInOut",
     //   // paused: false,
@@ -51,7 +48,6 @@ const IconsContainer = () => {
     //   x: 0,
     //   y: 0,
     //   z: -7,
-
     //   // repeat: -1,
     //   ease: "Power1.easeInOut",
     //   // paused: false,

@@ -39,14 +39,10 @@ const ModelLoader = () => {
   }, [camera]);
 
   const handleClick = () => {
-    //todo : if one the mesh is already selected and then user click another mesh, previously selected mesh color should be reset to its original
+    hovered2?.material.color.set(new THREE.Color("#6d6d6d"));
     setHovered2(hovered);
-    setOriginalColor2(originalColor);
     if (originalColor && hovered) {
-      // setOriginalColor(originalColor2);
-      hovered2?.material?.color.copy(originalColor2);
       setColorsShow(true);
-      setOriginalColor(hovered.material.color.clone());
     }
 
     if (rotationRef.current && modelRotation) {
@@ -58,15 +54,22 @@ const ModelLoader = () => {
       // }, 5000);
     }
   };
+  useEffect(() => {
+    if (selectedColor) return;
+  }, [hovered2]);
 
   useEffect(() => {
-    console.log("<<<>>>>", selectedColor, hovered2);
+    // TODO : if the mesh color is changed once and if we clickk on the very same mesh on very next time, it will not keep the color grey until the color is selected(it chnages back to the changed color(that was the new original)). fix that
     if (!selectedColor && !hovered2) return;
-    console.log("////");
-    hovered2?.material.color.set(selectedColor);
+    hovered2?.material.color.set(selectedColor); //here if the selected color is null it will set to the previous mesh color
     setOriginalColor(hovered2?.material.color.clone());
     setOriginalColor2(hovered2?.material.color.clone());
     setSelectedColor(null);
+    return () => {
+      if (!selectedColor) {
+        hovered2?.material.color.set(originalColor);
+      }
+    };
   }, [selectedColor, hovered2]);
 
   useEffect(() => {
