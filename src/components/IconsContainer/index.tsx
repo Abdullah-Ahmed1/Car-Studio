@@ -3,22 +3,20 @@ import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsC
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
 import { useAtomValue } from "jotai";
-import gsap from "gsap";
 const IconsContainer = () => {
   const [rotation, setRotation] = useAtom(RotationAtom);
-  const camera = useAtom(CameraAtom);
+  const camera = useAtomValue(CameraAtom);
 
   const handleZoomIn = () => {
-    console.log("here?????");
-    gsap.to(camera, {
-      y: "-10",
-      duration: 10,
-      // repeat: -1,
-      ease: "linear",
-      //  paused: false,
-    });
+    if (!camera) return;
+    camera.fov -= 1;
+    camera?.updateProjectionMatrix();
   };
-  const handleZoomOut = () => {};
+  const handleZoomOut = () => {
+    if (!camera) return;
+    camera.fov += 1;
+    camera?.updateProjectionMatrix();
+  };
 
   return (
     <MainContainer>

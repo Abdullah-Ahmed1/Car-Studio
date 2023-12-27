@@ -1,28 +1,31 @@
 import gsap from "gsap";
-import { useState, useRef, useEffect } from "react";
-import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { useState, useRef, useEffect } from "react";
+import { useSetAtom, useAtom, useAtomValue } from "jotai";
+import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { RotationAtom } from "../../atoms/rotation.atom";
+
 import { ColorsAtom } from "../../atoms/colors.atom";
-import { SelectedColorAtom } from "../../atoms/color.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
-import { useSetAtom, useAtom, useAtomValue } from "jotai";
+import { RotationAtom } from "../../atoms/rotation.atom";
+import { SelectedColorAtom } from "../../atoms/color.atom";
 
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
-  const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
-  const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
-  const [modelRotation, setModelRotation] = useAtom(RotationAtom);
+
   const [originalColor, setOriginalColor] = useState(null);
   const [originalColor2, setOriginalColor2] = useState(null);
-  const setColorsShow = useSetAtom(ColorsAtom);
-  const selectedColor = useAtomValue(SelectedColorAtom);
-  const setCamera = useSetAtom(CameraAtom);
+  const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
+  const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
 
-  const rotationRef = useRef<null | React.MutableRefObject<object>>(null);
+  const setCamera = useSetAtom(CameraAtom);
+  const setColorsShow = useSetAtom(ColorsAtom);
+  const [selectedColor, setSelectedColor] = useAtom(SelectedColorAtom);
+  const [modelRotation, setModelRotation] = useAtom(RotationAtom);
+
   const cameraRef = useRef<unknown>(null);
+  const rotationRef = useRef<null | React.MutableRefObject<object>>(null);
 
   const gltf = useLoader(GLTFLoader, "/nissan1.glb", (loader) => {
     const dracoLoader = new DRACOLoader();
@@ -56,11 +59,14 @@ const ModelLoader = () => {
   };
 
   useEffect(() => {
-    if (!selectedColor && !hovered2 && !hovered2) return;
+    console.log("<<<>>>>", selectedColor, hovered2);
+    if (!selectedColor && !hovered2) return;
+    console.log("////");
     hovered2?.material.color.set(selectedColor);
     setOriginalColor(hovered2?.material.color.clone());
     setOriginalColor2(hovered2?.material.color.clone());
-  }, [selectedColor]);
+    setSelectedColor(null);
+  }, [selectedColor, hovered2]);
 
   useEffect(() => {
     if (!rotationRef.current) return;

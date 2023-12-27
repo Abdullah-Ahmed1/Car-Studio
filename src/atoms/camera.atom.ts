@@ -1,3 +1,3 @@
 import { atom } from "jotai";
-import { Camera } from "three";
-export const CameraAtom = atom<Camera | null>(null);
+import { PerspectiveCamera } from "three";
+export const CameraAtom = atom<PerspectiveCamera | null>(null);
