@@ -3,7 +3,7 @@ import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsC
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
 import { useAtomValue } from "jotai";
-import { gsap } from "gsap";
+// import { gsap } from "gsap";
 import SideSelection from "../SideSelectionComponent";
 const IconsContainer = () => {
   const [rotation, setRotation] = useAtom(RotationAtom);

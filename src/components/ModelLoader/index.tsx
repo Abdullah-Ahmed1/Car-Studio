@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import * as THREE from "three";
 import { useState, useRef, useEffect } from "react";
-import { useSetAtom, useAtom, useAtomValue } from "jotai";
+import { useSetAtom, useAtom } from "jotai";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
@@ -15,7 +15,7 @@ const ModelLoader = () => {
   const { raycaster, camera } = useThree();
 
   const [originalColor, setOriginalColor] = useState(null);
-  const [originalColor2, setOriginalColor2] = useState(null);
+  // const [originalColor2, setOriginalColor2] = useState(null);
   const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
   const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
 
@@ -63,7 +63,7 @@ const ModelLoader = () => {
     if (!selectedColor && !hovered2) return;
     hovered2?.material.color.set(selectedColor); //here if the selected color is null it will set to the previous mesh color
     setOriginalColor(hovered2?.material.color.clone());
-    setOriginalColor2(hovered2?.material.color.clone());
+    // setOriginalColor2(hovered2?.material.color.clone());
     setSelectedColor(null);
     return () => {
       if (!selectedColor) {
