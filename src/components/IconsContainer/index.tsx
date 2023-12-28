@@ -3,20 +3,20 @@ import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsC
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
 import { useAtomValue } from "jotai";
-// import { gsap } from "gsap";
 import SideSelection from "../SideSelectionComponent";
+import { PerspectiveCamera } from "three";
 const IconsContainer = () => {
   const [rotation, setRotation] = useAtom(RotationAtom);
   const camera = useAtomValue(CameraAtom);
 
   const handleZoomIn = () => {
     if (!camera) return;
-    camera.fov -= 1;
+    (camera as PerspectiveCamera).fov -= 1;
     camera?.updateProjectionMatrix();
   };
   const handleZoomOut = () => {
     if (!camera) return;
-    camera.fov += 1;
+    (camera as PerspectiveCamera).fov += 1;
     camera?.updateProjectionMatrix();
   };
   const handleViewChange = () => {

@@ -3,12 +3,8 @@ import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useAtom } from "jotai";
-import { SideAtom } from "../../atoms/side.atom";
 
 export default function SideSelection() {
-  const [side, setSide] = useAtom(SideAtom);
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

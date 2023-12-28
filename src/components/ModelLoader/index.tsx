@@ -1,4 +1,5 @@
 import gsap from "gsap";
+// import Tween from "gsap";
 import * as THREE from "three";
 import { useState, useRef, useEffect } from "react";
 import { useSetAtom, useAtom } from "jotai";
@@ -14,7 +15,7 @@ import { SelectedColorAtom } from "../../atoms/color.atom";
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
 
-  const [originalColor, setOriginalColor] = useState(null);
+  const [originalColor, setOriginalColor] = useState<THREE.Color | null>(null);
   // const [originalColor2, setOriginalColor2] = useState(null);
   const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
   const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
@@ -25,7 +26,7 @@ const ModelLoader = () => {
   const [modelRotation, setModelRotation] = useAtom(RotationAtom);
 
   const cameraRef = useRef<unknown>(null);
-  const rotationRef = useRef<null | React.MutableRefObject<object>>(null);
+  const rotationRef = useRef<unknown>(null);
 
   const gltf = useLoader(GLTFLoader, "/nissan1.glb", (loader) => {
     const dracoLoader = new DRACOLoader();
@@ -39,7 +40,6 @@ const ModelLoader = () => {
   }, [camera]);
 
   const handleClick = () => {
-    hovered2?.material.color.set(new THREE.Color("#6d6d6d"));
     setHovered2(hovered);
     if (originalColor && hovered) {
       setColorsShow(true);
@@ -47,7 +47,7 @@ const ModelLoader = () => {
 
     if (rotationRef.current && modelRotation) {
       setModelRotation(false);
-      rotationRef.current.paused(true);
+      (rotationRef.current as GSAPAnimation).paused(true);
       // setTimeout(() => {
       //   rotationRef.current.paused(false);
       //   setModelRotation(true);
@@ -61,24 +61,24 @@ const ModelLoader = () => {
   useEffect(() => {
     // TODO : if the mesh color is changed once and if we clickk on the very same mesh on very next time, it will not keep the color grey until the color is selected(it chnages back to the changed color(that was the new original)). fix that
     if (!selectedColor && !hovered2) return;
-    hovered2?.material.color.set(selectedColor); //here if the selected color is null it will set to the previous mesh color
-    setOriginalColor(hovered2?.material.color.clone());
+    if (selectedColor) (hovered2?.material as THREE.MeshBasicMaterial).color.set(selectedColor); //here if the selected color is null it will set to the previous mesh color
+    setOriginalColor((hovered2?.material as THREE.MeshBasicMaterial).color.clone());
     // setOriginalColor2(hovered2?.material.color.clone());
     setSelectedColor(null);
     return () => {
-      if (!selectedColor) {
-        hovered2?.material.color.set(originalColor);
+      if (!selectedColor && originalColor) {
+        (hovered2?.material as THREE.MeshBasicMaterial).color.set(originalColor);
       }
     };
   }, [selectedColor, hovered2]);
 
   useEffect(() => {
     if (!rotationRef.current) return;
-    modelRotation ? rotationRef.current.paused(false) : rotationRef.current.paused(true);
+    modelRotation ? (rotationRef.current as GSAPAnimation).paused(false) : (rotationRef.current as GSAPAnimation).paused(true);
   }, [modelRotation]);
 
   useEffect(() => {
-    rotationRef.current = gsap.to(gltf.scene.rotation, {
+    (rotationRef.current as GSAPAnimation) = gsap.to(gltf.scene.rotation, {
       y: "+=6.283",
       duration: 55,
       repeat: -1,
@@ -95,7 +95,7 @@ const ModelLoader = () => {
 
       if (mesh instanceof THREE.Mesh && mesh !== hovered) {
         if (hovered && originalColor) {
-          hovered.material.color.copy(originalColor);
+          (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
         }
         setHovered(mesh);
         setOriginalColor(mesh.material.color.clone());
@@ -103,7 +103,7 @@ const ModelLoader = () => {
       }
     } else {
       if (hovered && originalColor) {
-        hovered.material.color.copy(originalColor);
+        (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
         setHovered(null);
       }
     }
