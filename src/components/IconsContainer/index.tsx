@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsContainer, IconVisibility } from "./index.styled";
+import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsContainer } from "./index.styled";
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
 import { useAtomValue } from "jotai";
@@ -19,40 +19,6 @@ const IconsContainer = () => {
     (camera as PerspectiveCamera).fov += 1;
     camera?.updateProjectionMatrix();
   };
-  const handleViewChange = () => {
-    // gsap.to(camera.position, {
-    //   x: 20,
-    //   // y: -20,
-    //   duration: 1,
-    //   // repeat: -1,
-    //   ease: "Power1.easeInOut",
-    //   paused: false,
-    // });
-    // gsap.to(camera.position, {
-    //   x: 0,
-    //   y: 0,
-    //   z: 3,
-    //   // repeat: -1,
-    //   ease: "Power1.easeInOut",
-    //   // paused: false,
-    // });
-    // gsap.to(camera.position, {
-    //   x: 0,
-    //   y: 10,
-    //   z: 0,
-    //   // repeat: -1,
-    //   ease: "Power1.easeInOut",
-    //   // paused: false,
-    // });
-    // gsap.to(camera.position, {
-    //   x: 0,
-    //   y: 0,
-    //   z: -7,
-    //   // repeat: -1,
-    //   ease: "Power1.easeInOut",
-    //   // paused: false,
-    // });
-  };
 
   return (
     <MainContainer>
@@ -62,7 +28,6 @@ const IconsContainer = () => {
         <IconZoomIn onClick={handleZoomIn} />
         <IconZoomOut onClick={handleZoomOut} />
       </ZoomIconsContainer>
-      <IconVisibility onClick={handleViewChange} />
       <SideSelection />
     </MainContainer>
   );
