@@ -203,12 +203,6 @@ export default function SideSelection() {
   };
   const handleTop = () => {
     const modelTimeLine = gsap.timeline();
-    console.log(
-      "zzzz",
-      Math.trunc(rotationCamera?.object?.position.x),
-      Math.trunc(rotationCamera?.object?.position.y),
-      Math.trunc(rotationCamera?.object?.position.z)
-    );
     if (
       rotationCamera &&
       rotationCamera.object &&
