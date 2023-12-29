@@ -15,6 +15,7 @@ const ModelLoader = () => {
   const [originalColor, setOriginalColor] = useState<THREE.Color | null>(null);
   const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
   const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
+  const [clicked, setClicked] = useState(false);
 
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
@@ -34,14 +35,18 @@ const ModelLoader = () => {
   }, [camera]);
 
   const handleClick = () => {
+    setClicked(true);
     setHovered2(hovered);
     if (originalColor && hovered) {
       setColorsShow(true);
     }
   };
+
   useEffect(() => {
-    if (selectedColor) return;
-  }, [hovered2]);
+    if (!clicked || !hovered2) return;
+    setOriginalColor((hovered2?.material as THREE.MeshBasicMaterial).color.clone());
+    setClicked(false);
+  }, [clicked]);
 
   useEffect(() => {
     // TODO : if the mesh color is changed once and if we clickk on the very same mesh on very next time, it will not keep the color grey until the color is selected(it chnages back to the changed color(that was the new original)). fix that
