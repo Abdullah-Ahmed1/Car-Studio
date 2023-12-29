@@ -1,16 +1,11 @@
-import { OrbitControls, Environment, OrbitControlsProps } from "@react-three/drei";
-import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { OrbitControls, Environment } from "@react-three/drei";
+
 import ModelLoader from "../ModelLoader";
 import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
-import { useAtom } from "jotai";
-import { useRef } from "react";
-const ModelContainer = () => {
-  const rotationCameraRef = useRef<OrbitControlsProps | null>(null);
-  const [, setRotationCamera] = useAtom(RotationCameraAtom);
 
-  // useEffect(() => {
-  //   setRotationCamera(rotationCameraRef);
-  // }, [rotationCameraRef]);
+const ModelContainer = () => {
+  const [, setRotationCamera] = useAtom(RotationCameraAtom);
   return (
     <>
       <mesh>
@@ -33,7 +28,7 @@ const ModelContainer = () => {
         ref={(_ref) => {
           setRotationCamera(_ref);
         }}
-        autoRotate={false}
+        autoRotate={true}
         minDistance={3}
         maxDistance={5}
         rotateSpeed={0.75}

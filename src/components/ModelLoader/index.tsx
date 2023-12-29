@@ -1,30 +1,24 @@
-import gsap from "gsap";
-// import Tween from "gsap";
 import * as THREE from "three";
 import { useState, useRef, useEffect } from "react";
-import { useSetAtom, useAtom, useAtomValue } from "jotai";
+import { useSetAtom, useAtom } from "jotai";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 import { ColorsAtom } from "../../atoms/colors.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
-import { RotationAtom } from "../../atoms/rotation.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
-import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
 
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
 
   const [originalColor, setOriginalColor] = useState<THREE.Color | null>(null);
-  // const [originalColor2, setOriginalColor2] = useState(null);
   const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
   const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
 
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
   const [selectedColor, setSelectedColor] = useAtom(SelectedColorAtom);
-  const rotationCamera = useAtomValue(RotationCameraAtom)
 
   const cameraRef = useRef<unknown>(null);
 
@@ -61,21 +55,6 @@ const ModelLoader = () => {
       }
     };
   }, [selectedColor, hovered2]);
-
-  // useEffect(() => {
-  //   if (!rotationRef.current) return;
-  //   modelRotation ? (rotationRef.current as GSAPAnimation).paused(false) : (rotationRef.current as GSAPAnimation).paused(true);
-  // }, [modelRotation]);
-
-  // useEffect(() => {
-  //   (rotationRef.current as GSAPAnimation) = gsap.to(gltf.scene.rotation, {
-  //     y: "+=6.283",
-  //     duration: 55,
-  //     repeat: -1,
-  //     ease: "linear",
-  //     paused: false,
-  //   });
-  // }, [gltf.scene]);
 
   useFrame(() => {
     const intersects: THREE.Intersection[] = raycaster.intersectObject(gltf.scene, true);
