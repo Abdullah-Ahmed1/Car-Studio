@@ -1,4 +1,5 @@
 import { Canvas } from "@react-three/fiber";
+
 import { CanvasWrapper } from "./index.styled";
 import ModelContainer from "../ModelContainer";
 

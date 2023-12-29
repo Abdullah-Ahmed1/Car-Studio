@@ -1,11 +1,13 @@
 import { useAtom } from "jotai";
-import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsContainer } from "./index.styled";
-import { RotationAtom } from "../../atoms/rotation.atom";
-import { CameraAtom } from "../../atoms/camera.atom";
 import { useAtomValue } from "jotai";
-import SideSelection from "../SideSelectionComponent";
 import { PerspectiveCamera } from "three";
+
+import SideSelection from "../SideSelectionComponent";
+import { CameraAtom } from "../../atoms/camera.atom";
+import { RotationAtom } from "../../atoms/rotation.atom";
 import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
+import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsContainer } from "./index.styled";
+
 const IconsContainer = () => {
   const [rotation, setRotation] = useAtom(RotationAtom);
   const camera = useAtomValue(CameraAtom);

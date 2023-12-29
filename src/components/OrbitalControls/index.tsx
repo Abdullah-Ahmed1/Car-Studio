@@ -1,7 +1,8 @@
 import { FC } from "react";
-import { OrbitControls } from "@react-three/drei";
-import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
 import { useAtom } from "jotai";
+import { OrbitControls } from "@react-three/drei";
+
+import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
 
 const OrbitControl: FC = () => {
   const [, setRotationCamera] = useAtom(RotationCameraAtom);

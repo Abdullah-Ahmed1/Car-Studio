@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { useState, useRef, useEffect } from "react";
 import { useSetAtom, useAtom } from "jotai";
+import { useState, useRef, useEffect } from "react";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";

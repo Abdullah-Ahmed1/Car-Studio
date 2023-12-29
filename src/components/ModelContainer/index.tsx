@@ -1,8 +1,8 @@
 import { Environment } from "@react-three/drei";
 
+import Lights from "../Lights";
 import ModelLoader from "../ModelLoader";
 import OrbitControl from "../OrbitalControls";
-import Lights from "../Lights";
 
 const ModelContainer = () => {
   return (

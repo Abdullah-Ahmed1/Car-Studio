@@ -1,7 +1,8 @@
-import { MainContainer, Color, ColorContainer, IconPallete } from "./index.styled";
-import { ColorsAtom } from "../../atoms/colors.atom";
 import { useAtom, useSetAtom } from "jotai";
+
+import { ColorsAtom } from "../../atoms/colors.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
+import { MainContainer, Color, ColorContainer, IconPallete } from "./index.styled";
 
 const colors = ["#ff0000", "#FFFFFF", "#800080", "#FFA500", "#FFFF00", "#00FF00"];
 
