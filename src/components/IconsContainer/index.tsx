@@ -5,9 +5,11 @@ import { CameraAtom } from "../../atoms/camera.atom";
 import { useAtomValue } from "jotai";
 import SideSelection from "../SideSelectionComponent";
 import { PerspectiveCamera } from "three";
+import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
 const IconsContainer = () => {
   const [rotation, setRotation] = useAtom(RotationAtom);
   const camera = useAtomValue(CameraAtom);
+  const rotationCamera = useAtomValue(RotationCameraAtom);
 
   const handleZoomIn = () => {
     if (!camera) return;
@@ -20,10 +22,21 @@ const IconsContainer = () => {
     camera?.updateProjectionMatrix();
   };
 
+  const handlePlayRotation = () => {
+    if (!rotationCamera) return;
+    rotationCamera.autoRotate = true;
+    setRotation(true);
+  };
+  const handlePauseRotation = () => {
+    if (!rotationCamera) return;
+    rotationCamera.autoRotate = false;
+    setRotation(false);
+  };
+
   return (
     <MainContainer>
-      {rotation && <PauseIcon onClick={() => setRotation(false)} />}
-      {!rotation && <PlayIcon onClick={() => setRotation(true)} />}
+      {rotation && <PauseIcon onClick={handlePauseRotation} />}
+      {!rotation && <PlayIcon onClick={handlePlayRotation} />}
       <ZoomIconsContainer>
         <IconZoomIn onClick={handleZoomIn} />
         <IconZoomOut onClick={handleZoomOut} />

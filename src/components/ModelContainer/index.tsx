@@ -1,6 +1,16 @@
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment, OrbitControlsProps } from "@react-three/drei";
+import { useEffect } from "react";
 import ModelLoader from "../ModelLoader";
+import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
+import { useAtom } from "jotai";
+import { useRef } from "react";
 const ModelContainer = () => {
+  const rotationCameraRef = useRef<OrbitControlsProps | null>(null);
+  const [, setRotationCamera] = useAtom(RotationCameraAtom);
+
+  // useEffect(() => {
+  //   setRotationCamera(rotationCameraRef);
+  // }, [rotationCameraRef]);
   return (
     <>
       <mesh>
@@ -20,6 +30,10 @@ const ModelContainer = () => {
         <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10]} />
       </directionalLight>
       <OrbitControls
+        ref={(_ref) => {
+          setRotationCamera(_ref);
+        }}
+        autoRotate={false}
         minDistance={3}
         maxDistance={5}
         rotateSpeed={0.75}

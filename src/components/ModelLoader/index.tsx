@@ -2,7 +2,7 @@ import gsap from "gsap";
 // import Tween from "gsap";
 import * as THREE from "three";
 import { useState, useRef, useEffect } from "react";
-import { useSetAtom, useAtom } from "jotai";
+import { useSetAtom, useAtom, useAtomValue } from "jotai";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
@@ -11,6 +11,7 @@ import { ColorsAtom } from "../../atoms/colors.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
+import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
 
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
@@ -23,10 +24,9 @@ const ModelLoader = () => {
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
   const [selectedColor, setSelectedColor] = useAtom(SelectedColorAtom);
-  const [modelRotation, setModelRotation] = useAtom(RotationAtom);
+  const rotationCamera = useAtomValue(RotationCameraAtom)
 
   const cameraRef = useRef<unknown>(null);
-  const rotationRef = useRef<unknown>(null);
 
   const gltf = useLoader(GLTFLoader, "/nissan1.glb", (loader) => {
     const dracoLoader = new DRACOLoader();
@@ -44,15 +44,6 @@ const ModelLoader = () => {
     if (originalColor && hovered) {
       setColorsShow(true);
     }
-
-    if (rotationRef.current && modelRotation) {
-      setModelRotation(false);
-      (rotationRef.current as GSAPAnimation).paused(true);
-      // setTimeout(() => {
-      //   rotationRef.current.paused(false);
-      //   setModelRotation(true);
-      // }, 5000);
-    }
   };
   useEffect(() => {
     if (selectedColor) return;
@@ -63,7 +54,6 @@ const ModelLoader = () => {
     if (!selectedColor && !hovered2) return;
     if (selectedColor) (hovered2?.material as THREE.MeshBasicMaterial).color.set(selectedColor); //here if the selected color is null it will set to the previous mesh color
     setOriginalColor((hovered2?.material as THREE.MeshBasicMaterial).color.clone());
-    // setOriginalColor2(hovered2?.material.color.clone());
     setSelectedColor(null);
     return () => {
       if (!selectedColor && originalColor) {
@@ -72,20 +62,20 @@ const ModelLoader = () => {
     };
   }, [selectedColor, hovered2]);
 
-  useEffect(() => {
-    if (!rotationRef.current) return;
-    modelRotation ? (rotationRef.current as GSAPAnimation).paused(false) : (rotationRef.current as GSAPAnimation).paused(true);
-  }, [modelRotation]);
+  // useEffect(() => {
+  //   if (!rotationRef.current) return;
+  //   modelRotation ? (rotationRef.current as GSAPAnimation).paused(false) : (rotationRef.current as GSAPAnimation).paused(true);
+  // }, [modelRotation]);
 
-  useEffect(() => {
-    (rotationRef.current as GSAPAnimation) = gsap.to(gltf.scene.rotation, {
-      y: "+=6.283",
-      duration: 55,
-      repeat: -1,
-      ease: "linear",
-      paused: false,
-    });
-  }, [gltf.scene]);
+  // useEffect(() => {
+  //   (rotationRef.current as GSAPAnimation) = gsap.to(gltf.scene.rotation, {
+  //     y: "+=6.283",
+  //     duration: 55,
+  //     repeat: -1,
+  //     ease: "linear",
+  //     paused: false,
+  //   });
+  // }, [gltf.scene]);
 
   useFrame(() => {
     const intersects: THREE.Intersection[] = raycaster.intersectObject(gltf.scene, true);
@@ -111,7 +101,16 @@ const ModelLoader = () => {
 
   return (
     <group>
-      <primitive object={gltf.scene} onClick={handleClick} />
+      <primitive object={gltf.scene} onClick={handleClick}>
+        {gltf.scene &&
+          gltf.scene.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+              child.material.envMapIntensity = 0.25;
+              // child.material.metalness = 0.9;
+              // child.material.needsUpdate = true;
+            }
+          })}
+      </primitive>
     </group>
   );
 };

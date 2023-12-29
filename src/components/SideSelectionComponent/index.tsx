@@ -1,15 +1,17 @@
-import * as React from "react";
-import Menu from "@mui/material/Menu";
-import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { CameraAtom } from "../../atoms/camera.atom";
-import { useAtomValue } from "jotai";
 import gsap from "gsap";
+import * as THREE from "three";
+import * as React from "react";
+import { useAtomValue } from "jotai";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
+import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
 
 export default function SideSelection() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const camera = useAtomValue(CameraAtom);
+  const rotationCamera = useAtomValue(RotationCameraAtom);
 
   const open = Boolean(anchorEl);
 
@@ -20,51 +22,200 @@ export default function SideSelection() {
     setAnchorEl(null);
   };
   const handleFront = () => {
-    if (!camera) return;
-    gsap.to(camera.position, {
-      x: 0,
-      y: 0,
-      z: 10,
-      ease: "Power1.easeInOut",
-    });
+    if (
+      rotationCamera &&
+      rotationCamera.object &&
+      Math.trunc(rotationCamera?.object?.position.x) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.y) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.z) == -3
+    ) {
+      const modelTimeLine = gsap.timeline();
+
+      const radius = 3;
+      const duration = 0.5; // Adjust the duration as needed
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: radius * Math.cos(THREE.MathUtils.degToRad(0)),
+        y: 0,
+        z: radius * Math.sin(THREE.MathUtils.degToRad(0)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 4 * Math.cos(THREE.MathUtils.degToRad(90)),
+        y: 0,
+        z: 4 * Math.sin(THREE.MathUtils.degToRad(90)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+    } else {
+      if (rotationCamera && rotationCamera.object)
+        gsap.to(rotationCamera?.object?.position, {
+          x: 0,
+          y: 0,
+          z: 4,
+          ease: "Power1.easeInOut",
+        });
+    }
   };
   const handleBack = () => {
-    if (!camera) return;
-    gsap.to(camera.position, {
-      x: 0,
-      y: 0,
-      z: -10,
-      ease: "Power1.easeInOut",
-    });
+    if (!rotationCamera) return;
+    if (
+      rotationCamera &&
+      rotationCamera.object &&
+      Math.trunc(rotationCamera?.object?.position.x) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.y) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.z) == 3
+    ) {
+      const modelTimeLine = gsap.timeline();
+
+      const radius = 3;
+      const duration = 0.5;
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: radius * Math.cos(THREE.MathUtils.degToRad(0)),
+        y: 0,
+        z: radius * Math.sin(THREE.MathUtils.degToRad(0)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 4 * Math.cos(THREE.MathUtils.degToRad(270)),
+        y: 0,
+        z: 4 * Math.sin(THREE.MathUtils.degToRad(270)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+    } else if (
+      rotationCamera &&
+      rotationCamera.object &&
+      Math.trunc(rotationCamera?.object?.position.x) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.y) == 4 &&
+      Math.trunc(rotationCamera?.object?.position.z) == 1
+    ) {
+      const modelTimeLine = gsap.timeline();
+
+      const radius = 3;
+      const duration = 0.5;
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: radius * Math.cos(THREE.MathUtils.degToRad(180)),
+        y: 0,
+        z: radius * Math.sin(THREE.MathUtils.degToRad(180)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 4 * Math.cos(THREE.MathUtils.degToRad(270)),
+        y: 0,
+        z: 4 * Math.sin(THREE.MathUtils.degToRad(270)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+    } else {
+      if (rotationCamera && rotationCamera.object)
+        gsap.to(rotationCamera?.object?.position, {
+          x: 0,
+          y: 0,
+          z: -4,
+          ease: "Power1.easeInOut",
+        });
+    }
   };
   const handleLeft = () => {
-    if (!camera) return;
-    gsap.to(camera.position, {
-      x: -10,
-      y: 0,
-      z: 0,
-      duration: 1,
-      ease: "Power1.easeInOut",
-      paused: false,
-    });
+    if (
+      rotationCamera &&
+      rotationCamera.object &&
+      Math.trunc(rotationCamera?.object?.position.x) == 3 &&
+      Math.trunc(rotationCamera?.object?.position.y) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.z) == 0
+    ) {
+      const modelTimeLine = gsap.timeline();
+
+      const radius = 3;
+      const duration = 0.5;
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: radius * Math.cos(THREE.MathUtils.degToRad(90)),
+        y: 0,
+        z: radius * Math.sin(THREE.MathUtils.degToRad(90)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 4 * Math.cos(THREE.MathUtils.degToRad(180)),
+        y: 0,
+        z: 4 * Math.sin(THREE.MathUtils.degToRad(180)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+    } else {
+      if (rotationCamera && rotationCamera.object)
+        gsap.to(rotationCamera?.object?.position, {
+          x: -4,
+          y: 0,
+          z: 0,
+          duration: 1,
+          ease: "Power1.easeInOut",
+          paused: false,
+        });
+    }
   };
   const handleRight = () => {
-    if (!camera) return;
-    gsap.to(camera.position, {
-      x: 10,
+    if (
+      rotationCamera &&
+      rotationCamera.object &&
+      Math.trunc(rotationCamera?.object?.position.x) == -3 &&
+      Math.trunc(rotationCamera?.object?.position.y) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.z) == 0
+    ) {
+      const modelTimeLine = gsap.timeline();
+
+      const radius = 3;
+      const duration = 0.5;
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: radius * Math.cos(THREE.MathUtils.degToRad(90)),
+        y: 0,
+        z: radius * Math.sin(THREE.MathUtils.degToRad(90)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 4 * Math.cos(THREE.MathUtils.degToRad(0)),
+        y: 0,
+        z: 4 * Math.sin(THREE.MathUtils.degToRad(0)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+    } else {
+      if (rotationCamera && rotationCamera.object)
+        gsap.to(rotationCamera?.object?.position, {
+          x: 4,
+          y: 0,
+          z: 0,
+          duration: 1,
+          ease: "Power1.easeInOut",
+          paused: false,
+        });
+    }
+  };
+  const handleTop = () => {
+    const modelTimeLine = gsap.timeline();
+    if (!rotationCamera || !rotationCamera.object) return;
+    modelTimeLine.to(rotationCamera?.object?.position, {
+      x: 0,
       y: 0,
-      z: 0,
+      z: 4,
       duration: 1,
       ease: "Power1.easeInOut",
       paused: false,
     });
-  };
-  const handleTop = () => {
-    if (!camera) return;
-    gsap.to(camera.position, {
+    modelTimeLine.to(rotationCamera?.object?.position, {
       x: 0,
       y: 10,
-      z: 0,
+      z: 4,
       duration: 1,
       ease: "Power1.easeInOut",
       paused: false,
