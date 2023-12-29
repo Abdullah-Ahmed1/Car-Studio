@@ -212,22 +212,60 @@ export default function SideSelection() {
     )
       return;
     if (!rotationCamera || !rotationCamera.object) return;
-    modelTimeLine.to(rotationCamera?.object?.position, {
-      x: 0,
-      y: 0,
-      z: 4,
-      duration: 1,
-      ease: "Power1.easeInOut",
-      paused: false,
-    });
-    modelTimeLine.to(rotationCamera?.object?.position, {
-      x: 0,
-      y: 10,
-      z: 4,
-      duration: 1,
-      ease: "Power1.easeInOut",
-      paused: false,
-    });
+    console.log("reachedddddddd");
+    if (
+      rotationCamera &&
+      rotationCamera.object &&
+      Math.trunc(rotationCamera?.object?.position.x) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.y) == 0 &&
+      Math.trunc(rotationCamera?.object?.position.z) == -3
+    ) {
+      const modelTimeLine = gsap.timeline();
+
+      const radius = 3;
+      const duration = 0.5; // Adjust the duration as needed
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: radius * Math.cos(THREE.MathUtils.degToRad(0)),
+        y: 0,
+        z: radius * Math.sin(THREE.MathUtils.degToRad(0)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 4 * Math.cos(THREE.MathUtils.degToRad(90)),
+        y: 0,
+        z: 4 * Math.sin(THREE.MathUtils.degToRad(90)),
+        duration,
+        ease: "Power0.easeInOut",
+      });
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 0,
+        y: 10,
+        z: 4,
+        duration: 1,
+        ease: "Power1.easeInOut",
+        paused: false,
+      });
+    } else {
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 0,
+        y: 0,
+        z: 4,
+        duration: 1,
+        ease: "Power1.easeInOut",
+        paused: false,
+      });
+      modelTimeLine.to(rotationCamera?.object?.position, {
+        x: 0,
+        y: 10,
+        z: 4,
+        duration: 1,
+        ease: "Power1.easeInOut",
+        paused: false,
+      });
+    }
   };
 
   return (
