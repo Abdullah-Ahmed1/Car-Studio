@@ -1,6 +1,7 @@
 import * as THREE from "three";
-import { useSetAtom, useAtom } from "jotai";
+import { useDrag } from "react-use-gesture";
 import { useState, useRef, useEffect } from "react";
+import { useSetAtom, useAtom, useAtomValue } from "jotai";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
@@ -8,14 +9,18 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { ColorsAtom } from "../../atoms/colors.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
+import { EnableDragAtom } from "../../atoms/enableDrag.atom";
 
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
-
+  const { size, viewport } = useThree();
+  const aspect = size.width / viewport.width;
   const [originalColor, setOriginalColor] = useState<THREE.Color | null>(null);
   const [hovered, setHovered] = useState<THREE.Mesh | null>(null);
   const [hovered2, setHovered2] = useState<THREE.Mesh | null>(null);
   const [clicked, setClicked] = useState(false);
+  const enableDrag = useAtomValue(EnableDragAtom);
+  const [position, setPosition] = useState([0, 0, 0]);
 
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
@@ -82,10 +87,17 @@ const ModelLoader = () => {
       }
     }
   });
+  const bind = useDrag(
+    ({ offset: [x, y] }) => {
+      const [, , z] = position;
+      enableDrag && setPosition([x / aspect, -y / aspect, z / aspect]);
+    },
+    { pointerEvents: true }
+  );
 
   return (
     <group>
-      <primitive object={gltf.scene} onClick={handleClick}>
+      <primitive object={gltf.scene} position={position} onClick={handleClick} {...bind()}>
         {gltf.scene &&
           gltf.scene.traverse((child) => {
             if (child instanceof THREE.Mesh) {

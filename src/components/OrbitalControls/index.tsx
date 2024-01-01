@@ -1,11 +1,13 @@
 import { FC } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { OrbitControls } from "@react-three/drei";
 
+import { EnableDragAtom } from "../../atoms/enableDrag.atom";
 import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
 
 const OrbitControl: FC = () => {
   const [, setRotationCamera] = useAtom(RotationCameraAtom);
+  const enableDrag = useAtomValue(EnableDragAtom);
 
   return (
     <OrbitControls
@@ -14,11 +16,13 @@ const OrbitControl: FC = () => {
       }}
       autoRotate={true}
       minDistance={3}
+      enableRotate={!enableDrag}
       maxDistance={5}
       rotateSpeed={0.75}
       minPolarAngle={Math.PI / 9}
       maxPolarAngle={Math.PI - Math.PI / 1.8}
-      enablePan={false}
+      // enablePan={false}
+      // enabled={false}
     />
   );
 };

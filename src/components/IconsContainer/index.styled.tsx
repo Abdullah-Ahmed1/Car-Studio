@@ -1,9 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import ControlCameraIcon from "@mui/icons-material/ControlCamera";
 
 export const MainContainer = styled.div`
   position: absolute;
@@ -46,4 +47,16 @@ export const IconZoomOut = styled(ZoomOutIcon)`
 export const IconVisibility = styled(VisibilityIcon)`
   color: white;
   cursor: pointer;
+`;
+
+export const EnableMoveIcon = styled(ControlCameraIcon)<{ drag: boolean }>`
+  color: #949494;
+  cursor: pointer;
+
+  ${({ drag }) => {
+    if (drag)
+      return css`
+        color: white;
+      `;
+  }}
 `;

@@ -4,13 +4,15 @@ import { PerspectiveCamera } from "three";
 
 import SideSelection from "../SideSelectionComponent";
 import { CameraAtom } from "../../atoms/camera.atom";
+import { EnableDragAtom } from "../../atoms/enableDrag.atom";
 import { RotationAtom } from "../../atoms/rotation.atom";
 import { RotationCameraAtom } from "../../atoms/rotationCamera.atom";
-import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsContainer } from "./index.styled";
+import { IconZoomOut, IconZoomIn, PauseIcon, MainContainer, PlayIcon, ZoomIconsContainer, EnableMoveIcon } from "./index.styled";
 
 const IconsContainer = () => {
   const [rotation, setRotation] = useAtom(RotationAtom);
   const camera = useAtomValue(CameraAtom);
+  const [enableDrag, setEnableDrag] = useAtom(EnableDragAtom);
   const rotationCamera = useAtomValue(RotationCameraAtom);
 
   const handleZoomIn = () => {
@@ -44,6 +46,7 @@ const IconsContainer = () => {
         <IconZoomOut onClick={handleZoomOut} />
       </ZoomIconsContainer>
       <SideSelection />
+      <EnableMoveIcon drag={enableDrag} onClick={() => setEnableDrag((prev) => !prev)} />
     </MainContainer>
   );
 };
