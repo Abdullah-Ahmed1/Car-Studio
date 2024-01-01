@@ -10,6 +10,7 @@ import { ColorsAtom } from "../../atoms/colors.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
 import { EnableDragAtom } from "../../atoms/enableDrag.atom";
+import { LoadCheckAtom } from "../../atoms/loadCheck.atom";
 
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
@@ -25,6 +26,7 @@ const ModelLoader = () => {
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
   const [selectedColor, setSelectedColor] = useAtom(SelectedColorAtom);
+  const [, setLoadCheck] = useAtom(LoadCheckAtom);
 
   const cameraRef = useRef<unknown>(null);
 
@@ -46,6 +48,10 @@ const ModelLoader = () => {
       setColorsShow(true);
     }
   };
+
+  useEffect(() => {
+    gltf ? setLoadCheck(true) : setLoadCheck(false);
+  }, [gltf]);
 
   useEffect(() => {
     if (!clicked || !hovered2) return;
@@ -92,7 +98,7 @@ const ModelLoader = () => {
       const [, , z] = position;
       enableDrag && setPosition([x / aspect, -y / aspect, z / aspect]);
     },
-    { pointerEvents: true }
+    { pointerEvents: false }
   );
 
   return (
