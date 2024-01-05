@@ -15,14 +15,12 @@ const ColorsContainer = () => {
   const setColor = useSetAtom(SelectedColorAtom);
 
   const handleColorClick = (item: string) => {
-    console.log("++++++", item);
     setColor(item);
     setColorsShow(false);
   };
 
   const handleMixerColorChange = (value: IColor) => {
     setMeshColor(value);
-    console.log(">>>>>>>>>>>>>", value);
     setColor(value.hex);
   };
   return (

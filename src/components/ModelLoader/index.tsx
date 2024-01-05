@@ -11,7 +11,7 @@ import { CameraAtom } from "../../atoms/camera.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
 import { EnableDragAtom } from "../../atoms/enableDrag.atom";
 import { LoadCheckAtom } from "../../atoms/loadCheck.atom";
-
+import { RotationCheckAtom } from "../../atoms/rotationcheck.atom";
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
   const { size, viewport } = useThree();
@@ -22,6 +22,7 @@ const ModelLoader = () => {
   const [clicked, setClicked] = useState(false);
   const enableDrag = useAtomValue(EnableDragAtom);
   const [position, setPosition] = useState([0, 0, 0]);
+  const isRotating = useAtomValue(RotationCheckAtom);
 
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
@@ -74,22 +75,23 @@ const ModelLoader = () => {
 
   useFrame(() => {
     const intersects: THREE.Intersection[] = raycaster.intersectObject(gltf.scene, true);
+    if (!isRotating) {
+      if (intersects.length > 0) {
+        const mesh = intersects[0].object;
 
-    if (intersects.length > 0) {
-      const mesh = intersects[0].object;
-
-      if (mesh instanceof THREE.Mesh && mesh !== hovered) {
+        if (mesh instanceof THREE.Mesh && mesh !== hovered) {
+          if (hovered && originalColor) {
+            (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
+          }
+          setHovered(mesh);
+          setOriginalColor(mesh.material.color.clone());
+          mesh.material.color.set("#6d6d6d");
+        }
+      } else {
         if (hovered && originalColor) {
           (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
+          setHovered(null);
         }
-        setHovered(mesh);
-        setOriginalColor(mesh.material.color.clone());
-        mesh.material.color.set("#6d6d6d");
-      }
-    } else {
-      if (hovered && originalColor) {
-        (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
-        setHovered(null);
       }
     }
   });
