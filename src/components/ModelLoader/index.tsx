@@ -8,10 +8,11 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 import { ColorsAtom } from "../../atoms/colors.atom";
 import { CameraAtom } from "../../atoms/camera.atom";
+import { LoadCheckAtom } from "../../atoms/loadCheck.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
 import { EnableDragAtom } from "../../atoms/enableDrag.atom";
-import { LoadCheckAtom } from "../../atoms/loadCheck.atom";
 import { RotationCheckAtom } from "../../atoms/rotationcheck.atom";
+
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
   const { size, viewport } = useThree();
@@ -43,12 +44,18 @@ const ModelLoader = () => {
   }, [camera]);
 
   const handleClick = () => {
+    // if (isRotating) return;
     setClicked(true);
     setHovered2(hovered);
     if (originalColor && hovered) {
       setColorsShow(true);
     }
   };
+
+  useEffect(() => {
+    if (!isRotating) return;
+    if (hovered && originalColor) (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
+  }, [isRotating]);
 
   useEffect(() => {
     gltf ? setLoadCheck(true) : setLoadCheck(false);
