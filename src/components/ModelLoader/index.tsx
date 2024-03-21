@@ -12,6 +12,7 @@ import { LoadCheckAtom } from "../../atoms/loadCheck.atom";
 import { SelectedColorAtom } from "../../atoms/color.atom";
 import { EnableDragAtom } from "../../atoms/enableDrag.atom";
 import { RotationCheckAtom } from "../../atoms/rotationcheck.atom";
+import { DragAtom } from "../../atoms/drag.atom";
 
 const ModelLoader = () => {
   const { raycaster, camera } = useThree();
@@ -24,7 +25,7 @@ const ModelLoader = () => {
   const enableDrag = useAtomValue(EnableDragAtom);
   const [position, setPosition] = useState([0, 0, 0]);
   const isRotating = useAtomValue(RotationCheckAtom);
-
+  const [isDrag, setIsDrag] = useAtom(DragAtom);
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
   const [selectedColor, setSelectedColor] = useAtom(SelectedColorAtom);
@@ -44,6 +45,12 @@ const ModelLoader = () => {
   }, [camera]);
 
   const handleClick = () => {
+    // console.log("======>>>>>", isDrag);
+    // if (isDrag) {
+    //   setIsDrag(false);
+    //   return;
+    // }
+    console.log(">>><<<<");
     // if (isRotating) return;
     setClicked(true);
     setHovered2(hovered);
@@ -52,14 +59,29 @@ const ModelLoader = () => {
     }
   };
 
-  useEffect(() => {
-    if (!isRotating) return;
-    if (hovered && originalColor) (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
-  }, [isRotating]);
+  // useEffect(() => {
+  //   if (!isRotating) return;
+  //   if (hovered && originalColor) (hovered.material as THREE.MeshBasicMaterial).color.copy(originalColor);
+  // }, [isRotating]);
 
   useEffect(() => {
     gltf ? setLoadCheck(true) : setLoadCheck(false);
   }, [gltf]);
+
+  useEffect(() => {
+    console.log(isRotating);
+
+    const handleMouseMove = () => {
+      if (isRotating) {
+        console.log("mouse moved=====>>");
+        setIsDrag(true);
+      }
+    };
+    document.body.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      document.body.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [isRotating]);
 
   useEffect(() => {
     if (!clicked || !hovered2) return;
@@ -112,7 +134,7 @@ const ModelLoader = () => {
 
   return (
     <group>
-      <primitive object={gltf.scene} position={position} onClick={handleClick} {...bind()}>
+      <primitive object={gltf.scene} position={position} onClick={handleClick} onPointerMove={() => console.log(">>>>>>????")} {...bind()}>
         {gltf.scene &&
           gltf.scene.traverse((child) => {
             if (child instanceof THREE.Mesh) {

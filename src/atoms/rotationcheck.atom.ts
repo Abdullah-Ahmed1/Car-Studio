@@ -1,2 +1,2 @@
 import { atom } from "jotai";
-export const RotationCheckAtom = atom<boolean>(true);
+export const RotationCheckAtom = atom<boolean>(false);
