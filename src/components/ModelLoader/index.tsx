@@ -25,7 +25,7 @@ const ModelLoader = () => {
   const enableDrag = useAtomValue(EnableDragAtom);
   const [position, setPosition] = useState([0, 0, 0]);
   const isRotating = useAtomValue(RotationCheckAtom);
-  const [isDrag, setIsDrag] = useAtom(DragAtom);
+  const [, setIsDrag] = useAtom(DragAtom);
   const setCamera = useSetAtom(CameraAtom);
   const setColorsShow = useSetAtom(ColorsAtom);
   const [selectedColor, setSelectedColor] = useAtom(SelectedColorAtom);
