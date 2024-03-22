@@ -2,13 +2,13 @@ import { Canvas } from "@react-three/fiber";
 
 import { CanvasWrapper } from "./index.styled";
 import ModelContainer from "../ModelContainer";
-import { XR, VRButton } from "@react-three/xr";
+import { XR, ARButton } from "@react-three/xr";
 
 const Scene = () => {
   return (
     <>
       <CanvasWrapper>
-        <VRButton />
+        <ARButton />
         <Canvas camera={{ fov: 35 }}>
           <XR>
             <ModelContainer />
